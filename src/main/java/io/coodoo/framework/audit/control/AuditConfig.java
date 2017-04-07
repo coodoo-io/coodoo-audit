@@ -29,11 +29,6 @@ public class AuditConfig {
     public static String DEFAULT_USER = "Unknown";
 
     /**
-     * ZoneId Object time zone for LocalDateTime instance creation.
-     */
-    public static String LOCAL_DATE_TIME_ZONE = "UTC";
-
-    /**
      * Maximal possible characters to use as a value in {@link AuditChange}
      */
     public static int MAX_CHARACTERS = 4000;
@@ -44,9 +39,9 @@ public class AuditConfig {
     public static String TIMESTAMP_PATTERN = "dd.MM.yyyy HH:mm:ss";
 
     /**
-     * Separator to join list elements
+     * ZoneId Object time zone for LocalDateTime instance creation.
      */
-    public static String LIST_SEPARATOR = ", ";
+    public static String LOCAL_DATE_TIME_ZONE = "UTC";
 
     /**
      * Name of the (optional) audit property file
@@ -71,10 +66,9 @@ public class AuditConfig {
                 log.info("Reading {}", auditPropertiesFilename);
 
                 DEFAULT_USER = loadProperty(DEFAULT_USER, "coodoo.audit.default.user");
-                LOCAL_DATE_TIME_ZONE = loadProperty(LOCAL_DATE_TIME_ZONE, "coodoo.audit.timezone");
                 MAX_CHARACTERS = loadProperty(MAX_CHARACTERS, "coodoo.audit.max.character");
+                LOCAL_DATE_TIME_ZONE = loadProperty(LOCAL_DATE_TIME_ZONE, "coodoo.audit.timezone");
                 TIMESTAMP_PATTERN = loadProperty(TIMESTAMP_PATTERN, "coodoo.audit.timestamp.pattern");
-                LIST_SEPARATOR = loadProperty(LIST_SEPARATOR, "coodoo.audit.list.separator");
             }
         } catch (IOException e) {
             log.info("Couldn't read {}!", auditPropertiesFilename, e);

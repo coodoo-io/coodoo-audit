@@ -21,24 +21,24 @@
    ```sql
    
    CREATE TABLE audit_event (
-     id bigint(20) NOT NULL AUTO_INCREMENT,
-     created_at datetime NOT NULL,
-     entity varchar(128) NOT NULL,
-     entity_id bigint(20) NOT NULL,
-     action varchar(8) NOT NULL,
-     user_id bigint(20) DEFAULT NULL,
-     user_name varchar(128) DEFAULT NULL,
+     id BIGINT(20) NOT NULL AUTO_INCREMENT,
+     created_at DATETIME NOT NULL,
+     entity VARCHAR(128) NOT NULL,
+     entity_id BIGINT(20) NOT NULL,
+     action VARCHAR(8) NOT NULL,
+     user_id BIGINT(20) DEFAULT NULL,
+     user_name VARCHAR(128) DEFAULT NULL,
      PRIMARY KEY (id)
    );
    
    CREATE TABLE audit_change (
-     id bigint(20) NOT NULL AUTO_INCREMENT,
-     event_id bigint(20) NOT NULL,
-     field varchar(128) NOT NULL,
-     old_value varchar(4096) DEFAULT NULL,
-     new_value varchar(4096) DEFAULT NULL,
-     sub_event_id bigint(20) DEFAULT NULL,
-     sub_event_name varchar(4096) DEFAULT NULL,
+     id BIGINT(20) NOT NULL AUTO_INCREMENT,
+     event_id BIGINT(20) NOT NULL,
+     field VARCHAR(128) NOT NULL,
+     old_value VARCHAR(4096) DEFAULT NULL,
+     new_value VARCHAR(4096) DEFAULT NULL,
+     sub_event_id BIGINT(20) DEFAULT NULL,
+     sub_event_name VARCHAR(4096) DEFAULT NULL,
      PRIMARY KEY (id)
    );
    
@@ -95,15 +95,13 @@ These are the properties to be defined on the file:
 ## Default user name if no user is present while the audit is taken
 coodoo.audit.default.user = Unknown
 
-## Time zone
-coodoo.audit.timezone = UTC
-
 ## Maximal possible characters to use as a value in a change
 coodoo.audit.max.character = 4000
 
 ## Default pattern for Date or LocalDateTime values in a change
 coodoo.audit.timestamp.pattern = dd.MM.yyyy HH:mm:ss
 
-## Separator to join list elements
-coodoo.audit.list.separator = ,
+## Time zone
+coodoo.audit.timezone = UTC
+
 ```
