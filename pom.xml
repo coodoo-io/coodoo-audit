@@ -5,7 +5,7 @@
     <artifactId>coodoo-audit</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
-    <description>Audit framework to store data changes observing JPA events</description>
+    <description>Audit framework to store data changes by observing JPA events</description>
     <url>https://github.com/coodoo-io/coodoo-audit</url>
     <inceptionYear>2017</inceptionYear>
     <organization>
