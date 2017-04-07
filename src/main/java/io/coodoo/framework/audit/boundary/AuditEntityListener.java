@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import io.coodoo.framework.audit.boundary.interceptor.AuditExportInterceptor;
 import io.coodoo.framework.audit.boundary.interceptor.AuditImportInterceptor;
 import io.coodoo.framework.audit.control.AuditUtil;
-import io.coodoo.framework.audit.entity.AuditAction;
 
 /**
  * @author coodoo GmbH (coodoo.io)

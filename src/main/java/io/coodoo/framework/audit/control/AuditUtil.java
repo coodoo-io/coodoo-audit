@@ -19,6 +19,7 @@ import javax.persistence.Transient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.coodoo.framework.audit.boundary.AuditAction;
 import io.coodoo.framework.audit.boundary.AuditInitialValues;
 import io.coodoo.framework.audit.boundary.AuditReadable;
 import io.coodoo.framework.audit.boundary.annotation.AuditBooleanLabels;
@@ -28,7 +29,6 @@ import io.coodoo.framework.audit.boundary.annotation.AuditDeleteMarker;
 import io.coodoo.framework.audit.boundary.annotation.AuditGroupEvents;
 import io.coodoo.framework.audit.boundary.annotation.AuditIgnoreField;
 import io.coodoo.framework.audit.boundary.annotation.AuditName;
-import io.coodoo.framework.audit.entity.AuditAction;
 
 /**
  * @author coodoo GmbH (coodoo.io)

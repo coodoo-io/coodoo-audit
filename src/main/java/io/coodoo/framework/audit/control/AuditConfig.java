@@ -53,13 +53,17 @@ public class AuditConfig {
      */
     private static final String auditPropertiesFilename = "coodoo.audit.properties";
 
-    Properties properties = new Properties();
+    static Properties properties = new Properties();
 
     public void init(@Observes @Initialized(ApplicationScoped.class) Object init) {
 
+        AuditConfig.loadProperties();
+    }
+
+    private static void loadProperties() {
         InputStream inputStream = null;
         try {
-            inputStream = getClass().getClassLoader().getResourceAsStream(auditPropertiesFilename);
+            inputStream = AuditConfig.class.getClassLoader().getResourceAsStream(auditPropertiesFilename);
 
             if (inputStream != null) {
 
@@ -85,7 +89,7 @@ public class AuditConfig {
         }
     }
 
-    private String loadProperty(String value, String key) {
+    private static String loadProperty(String value, String key) {
 
         String property = properties.getProperty(key);
         if (property == null) {
@@ -95,7 +99,7 @@ public class AuditConfig {
         return property;
     }
 
-    private int loadProperty(int value, String key) {
+    private static int loadProperty(int value, String key) {
         String property = properties.getProperty(key);
         if (property != null) {
             try {

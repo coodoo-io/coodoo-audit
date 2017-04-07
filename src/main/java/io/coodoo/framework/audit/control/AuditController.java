@@ -20,22 +20,23 @@ import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Id;
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.coodoo.framework.audit.boundary.AuditAction;
 import io.coodoo.framework.audit.boundary.AuditInitialValues;
 import io.coodoo.framework.audit.boundary.AuditManagedReadable;
 import io.coodoo.framework.audit.boundary.AuditReadable;
 import io.coodoo.framework.audit.boundary.annotation.AuditDeleteMarker;
+import io.coodoo.framework.audit.boundary.annotation.AuditEntityManager;
 import io.coodoo.framework.audit.boundary.annotation.AuditGroupEvents;
 import io.coodoo.framework.audit.boundary.annotation.AuditGroupEventsBreak;
 import io.coodoo.framework.audit.boundary.annotation.AuditRelatedEntity;
-import io.coodoo.framework.audit.entity.AuditAction;
 import io.coodoo.framework.audit.entity.AuditChange;
 import io.coodoo.framework.audit.entity.AuditEvent;
 
@@ -47,7 +48,8 @@ public class AuditController {
 
     private static Logger log = LoggerFactory.getLogger(AuditController.class);
 
-    @PersistenceContext
+    @Inject
+    @AuditEntityManager
     EntityManager entityManager;
 
     @Asynchronous
@@ -97,30 +99,31 @@ public class AuditController {
             // audit it the normal way
             AuditEvent auditEvent = createAuditEvent(entityName, entity.getEntiyId(), action, auditChanges, auditUser, createdAt);
 
-            // updated parent audit events
-            Map<Class<?>, Long> parentReferences = AuditUtil.getParentReferences(entity);
-            if (parentReferences.size() > 0) {
+            if (!action.equals(AuditAction.EXPORT) && !action.equals(AuditAction.IMPORT)) {
+                // updated parent audit events
+                Map<Class<?>, Long> parentReferences = AuditUtil.getParentReferences(entity);
+                if (parentReferences.size() > 0) {
 
-                String subEventName = toAuditableString(entity);
+                    String subEventName = toAuditableString(entity);
 
-                for (Map.Entry<Class<?>, Long> parentReference : parentReferences.entrySet()) {
+                    for (Map.Entry<Class<?>, Long> parentReference : parentReferences.entrySet()) {
 
-                    Class<?> entityClass = parentReference.getKey();
-                    Long entityId = parentReference.getValue();
+                        Class<?> entityClass = parentReference.getKey();
+                        Long entityId = parentReference.getValue();
 
-                    AuditChange parentReferenceChange = new AuditChange();
-                    parentReferenceChange.setField(entityName);
-                    parentReferenceChange.setSubEvent(auditEvent);
-                    parentReferenceChange.setSubEventName(subEventName);
+                        AuditChange parentReferenceChange = new AuditChange();
+                        parentReferenceChange.setField(entityName);
+                        parentReferenceChange.setSubEvent(auditEvent);
+                        parentReferenceChange.setSubEventName(subEventName);
 
-                    if (!groupChangesWithLatestEvent(entityClass, entityId, Arrays.asList(parentReferenceChange), 10, false, auditUser)) {
+                        if (!groupChangesWithLatestEvent(entityClass, entityId, Arrays.asList(parentReferenceChange), 10, false, auditUser)) {
 
-                        createAuditEvent(AuditUtil.getEntityName(entityClass), entityId, AuditAction.UPDATE, Arrays.asList(parentReferenceChange), auditUser,
-                                        createdAt);
+                            createAuditEvent(AuditUtil.getEntityName(entityClass), entityId, AuditAction.UPDATE, Arrays.asList(parentReferenceChange),
+                                            auditUser, createdAt);
+                        }
                     }
                 }
             }
-
             log.debug("Audit event written: {}", auditEvent.getId());
         }
     }

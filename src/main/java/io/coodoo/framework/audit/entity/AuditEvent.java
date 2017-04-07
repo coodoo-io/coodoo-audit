@@ -20,6 +20,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.Query;
 import javax.persistence.Table;
 
+import io.coodoo.framework.audit.boundary.AuditAction;
 import io.coodoo.framework.audit.control.AuditConfig;
 
 /**

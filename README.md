@@ -68,6 +68,24 @@
 	}   
 	```
 
+## Import / Export events
+
+`@AuditImport` and `@AuditExport` interceptor annotations.
+
+```xml
+<interceptors>
+	<class>io.coodoo.framework.audit.boundary.interceptor.AuditImportInterceptor</class>
+	<class>io.coodoo.framework.audit.boundary.interceptor.AuditExportInterceptor</class>
+</interceptors>
+```
+
+```java
+ void
+```
+
+
+
+
 ## Custom settings
 
 To provide own settings you need to add a property file named `coodoo.audit.properties` to your project. This file gets read on JavaEE server startup if available or manually by calling `AuditSettings.loadProperties()`;

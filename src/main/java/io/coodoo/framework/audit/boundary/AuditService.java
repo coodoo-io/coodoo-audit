@@ -7,13 +7,12 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
+import io.coodoo.framework.audit.boundary.annotation.AuditEntityManager;
 import io.coodoo.framework.audit.control.AuditConfig;
 import io.coodoo.framework.audit.control.AuditController;
 import io.coodoo.framework.audit.control.AuditUser;
 import io.coodoo.framework.audit.control.AuditUtil;
-import io.coodoo.framework.audit.entity.AuditAction;
 import io.coodoo.framework.audit.entity.AuditEvent;
 
 /**
@@ -22,7 +21,8 @@ import io.coodoo.framework.audit.entity.AuditEvent;
 @Stateless
 public class AuditService {
 
-    @PersistenceContext
+    @Inject
+    @AuditEntityManager
     EntityManager entityManager;
 
     @Inject
