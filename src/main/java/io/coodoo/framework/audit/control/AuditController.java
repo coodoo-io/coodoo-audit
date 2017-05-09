@@ -43,7 +43,7 @@ import io.coodoo.framework.audit.entity.AuditEvent;
 /**
  * @author coodoo GmbH (coodoo.io)
  */
-@Stateless()
+@Stateless
 public class AuditController {
 
     private static Logger log = LoggerFactory.getLogger(AuditController.class);
@@ -199,9 +199,6 @@ public class AuditController {
             // check if field want's its own event and breaks this grouping with no survivors
             List<String> groupBreakignFields = new ArrayList<>();
             for (Field field : AuditUtil.getFields(entityClass)) {
-                if (AuditUtil.skipField(field)) {
-                    continue;
-                }
                 if (field.isAnnotationPresent(AuditGroupEventsBreak.class)) {
                     groupBreakignFields.add(AuditUtil.getFieldName(field));
                 }

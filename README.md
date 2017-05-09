@@ -17,7 +17,6 @@
 2. Create the audit tables `audit_event` and `audit_change` in your database.
          
    ```sql
-         
    CREATE TABLE audit_event (
      id BIGINT(20) NOT NULL AUTO_INCREMENT,
      created_at DATETIME NOT NULL,
@@ -93,7 +92,7 @@
        // getters, setters, hashCode, equals, ...
    }
    ```
- From now on, every create, update and delete will be audited and stored in in the Database. You can access the audit data using the `AuditService` by giving the simple class name of the audited entity. This will get you all the data concerning the entity. To see the audit of one entry you have to give the ID as well.
+ From now on, every create, update and delete will be audited and stored in in the database. You can access the audit data using the `AuditService` by giving the simple class name of the audited entity. This will get you all the data concerning the entity. To see the audit of one entry you have to give the ID as well.
 
    ```java
    @Stateless
@@ -125,6 +124,12 @@ public class PersonService {
     }
 }
    ```
+
+## Make it pretty
+
+First of all you will need a name on an audit event, so you know who is to blame. Therefore you
+
+
 
 ## Import / Export events
 
