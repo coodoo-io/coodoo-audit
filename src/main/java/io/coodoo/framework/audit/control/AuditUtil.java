@@ -1,6 +1,7 @@
 package io.coodoo.framework.audit.control;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -28,6 +29,7 @@ import io.coodoo.framework.audit.boundary.annotation.AuditDateTimePattern;
 import io.coodoo.framework.audit.boundary.annotation.AuditDeleteMarker;
 import io.coodoo.framework.audit.boundary.annotation.AuditGroupEvents;
 import io.coodoo.framework.audit.boundary.annotation.AuditIgnoreField;
+import io.coodoo.framework.audit.boundary.annotation.AuditIgnoreFields;
 import io.coodoo.framework.audit.boundary.annotation.AuditName;
 
 /**
@@ -53,18 +55,27 @@ public final class AuditUtil {
     public static List<Field> getFields(Class<?> targetClass) {
 
         List<Field> fields = new ArrayList<>();
-
+        List<String> ignoreFields = new ArrayList<>();
         Class<?> inheritanceClass = targetClass;
+
         while (inheritanceClass != null) {
-            fields.addAll(Arrays.asList(inheritanceClass.getDeclaredFields()));
+            if (inheritanceClass.isAnnotationPresent(AuditIgnoreFields.class)) {
+                ignoreFields.addAll(Arrays.asList(inheritanceClass.getAnnotation(AuditIgnoreFields.class).value()));
+            }
+            for (Field field : inheritanceClass.getDeclaredFields()) {
+                // There is no need to check the JPA identifier and transient fields are a irrelevant
+                if (!field.isAnnotationPresent(Id.class) && !field.isAnnotationPresent(Transient.class)
+                // Defined to ignore
+                                && !field.isAnnotationPresent(AuditIgnoreField.class) && !ignoreFields.contains(field.getName())
+                                // Ignore collections, final and static fields
+                                && !Collection.class.isAssignableFrom(field.getType()) && !Modifier.isFinal(field.getModifiers())
+                                && !Modifier.isStatic(field.getModifiers())) {
+                    fields.add(field);
+                }
+            }
             inheritanceClass = inheritanceClass.getSuperclass();
         }
         return fields;
-    }
-
-    public static boolean skipField(Field field) {
-        return field.isAnnotationPresent(Id.class) || field.isAnnotationPresent(AuditIgnoreField.class) || field.isAnnotationPresent(Transient.class)
-                        || Collection.class.isAssignableFrom(field.getType());
     }
 
     public static boolean groupEvents(AuditInitialValues entity, AuditAction action) {
@@ -87,7 +98,7 @@ public final class AuditUtil {
 
     public static Map<String, Field> getNameFieldMapping(AuditInitialValues entity) {
 
-        return getFields(entity.getClass()).stream().filter(f -> !skipField(f)).collect(Collectors.toMap(f -> getFieldName(f), f -> f));
+        return getFields(entity.getClass()).stream().collect(Collectors.toMap(f -> getFieldName(f), f -> f));
     }
 
     public static Map<String, Object> getValues(AuditInitialValues entity) {
@@ -96,7 +107,7 @@ public final class AuditUtil {
 
         for (Field field : AuditUtil.getFields(entity.getClass())) {
             try {
-                if (skipField(field) || field.isAnnotationPresent(AuditCollectionParent.class)) {
+                if (field.isAnnotationPresent(AuditCollectionParent.class)) {
                     continue;
                 }
                 field.setAccessible(true);
@@ -147,9 +158,6 @@ public final class AuditUtil {
 
         try {
             for (Field field : getFields(entity.getClass())) {
-                if (skipField(field)) {
-                    continue;
-                }
                 if (field.isAnnotationPresent(AuditCollectionParent.class)) {
 
                     field.setAccessible(true);
