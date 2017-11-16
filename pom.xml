@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.coodoo</groupId>
     <artifactId>coodoo-audit</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
     <name>Audit</name>
     <description>Audit framework to store data changes by observing JPA events</description>

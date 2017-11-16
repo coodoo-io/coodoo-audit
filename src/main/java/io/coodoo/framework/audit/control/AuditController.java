@@ -131,6 +131,9 @@ public class AuditController {
     private List<AuditChange> getAuditChanges(AuditInitialValues entity, boolean initial) {
 
         List<AuditChange> auditChanges = new ArrayList<>();
+        if (entity == null) {
+            return auditChanges;
+        }
 
         Map<String, Object> newValues = AuditUtil.getValues(entity);
         Map<String, Object> oldValues = null;
@@ -257,7 +260,7 @@ public class AuditController {
 
     private String getRelatedEntityValue(Class<?> relatedEntityClass, Object value) {
 
-        if (value == null) {
+        if (relatedEntityClass == null || value == null) {
             return null;
         }
         for (Field field : AuditUtil.getFields(relatedEntityClass)) {
