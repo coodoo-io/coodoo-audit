@@ -22,7 +22,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.Id;
 import javax.persistence.NoResultException;
 
 import org.slf4j.Logger;
@@ -263,18 +262,15 @@ public class AuditController {
         if (relatedEntityClass == null || value == null) {
             return null;
         }
-        for (Field field : AuditUtil.getFields(relatedEntityClass)) {
 
-            if (field.isAnnotationPresent(Id.class)) {
-                if (field.getType() == value.getClass()) {
-                    try {
-                        Object relatedEntity = entityManager.find(relatedEntityClass, value);
-                        return toAuditableString(relatedEntity);
-                    } catch (NoResultException e) {
-                        log.warn("Related Entity not found: {} ID {}", relatedEntityClass, value);
-                    }
-                }
-                break;
+        Field idField = AuditUtil.getIdField(relatedEntityClass);
+
+        if (idField != null && idField.getType() == value.getClass()) {
+            try {
+                Object relatedEntity = entityManager.find(relatedEntityClass, value);
+                return toAuditableString(relatedEntity);
+            } catch (NoResultException e) {
+                log.warn("Related Entity not found: {} ID {}", relatedEntityClass, value);
             }
         }
         return value.toString();

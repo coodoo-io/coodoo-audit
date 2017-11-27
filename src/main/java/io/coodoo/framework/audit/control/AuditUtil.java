@@ -78,6 +78,21 @@ public final class AuditUtil {
         return fields;
     }
 
+    public static Field getIdField(Class<?> targetClass) {
+
+        Class<?> inheritanceClass = targetClass;
+
+        while (inheritanceClass != null) {
+            for (Field field : inheritanceClass.getDeclaredFields()) {
+                if (field.isAnnotationPresent(Id.class)) {
+                    return field;
+                }
+            }
+            inheritanceClass = inheritanceClass.getSuperclass();
+        }
+        return null;
+    }
+
     public static boolean groupEvents(AuditInitialValues entity, AuditAction action) {
         return (AuditAction.CREATE.equals(action) || AuditAction.UPDATE.equals(action)) && entity.getClass().isAnnotationPresent(AuditGroupEvents.class);
     }
