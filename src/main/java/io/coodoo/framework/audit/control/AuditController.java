@@ -248,6 +248,9 @@ public class AuditController {
     }
 
     private String toAuditableString(Object entity) {
+        if (entity == null) {
+            return null;
+        }
         if (entity instanceof AuditManagedReadable) {
             return ((AuditManagedReadable) entity).toAuditableString(entityManager);
         }

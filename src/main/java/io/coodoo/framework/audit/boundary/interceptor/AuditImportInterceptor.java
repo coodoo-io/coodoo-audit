@@ -1,13 +1,19 @@
 package io.coodoo.framework.audit.boundary.interceptor;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
+import javax.naming.NamingException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import io.coodoo.framework.audit.control.AuditUtil;
 
 /**
  * To mark a CREATE audit event as an IMPORT audit event, annotate the method with <code>@AuditImport</code>
@@ -21,31 +27,37 @@ public class AuditImportInterceptor implements Serializable {
 
     private static Logger log = LoggerFactory.getLogger(AuditImportInterceptor.class);
 
-    /**
-     * This flag is set <code>true</code> if this interceptor is used at the start of the transaction. A CREATE audit event is now marked as an IMPORT.
-     */
-    public static boolean isImport = false;
+    private static Map<Integer, LocalDateTime> transactions = new HashMap<>();
 
     public AuditImportInterceptor() {}
 
     @AroundInvoke
-    public Object toggleActionImport(InvocationContext ctx) throws Exception {
-
-        isImport = true;
-        log.info("Audit event 'CREATE' is now marked as 'IMPORT'");
+    public Object toggleActionImport(InvocationContext invocationContext) throws Exception {
 
         try {
 
+            log.info("Audit events are now marked as 'IMPORT' for this transaction.");
+            transactions.put(AuditUtil.getTransactionKey(), LocalDateTime.now());
+
             // do a persist and get audited as an import
-            return ctx.proceed();
+            return invocationContext.proceed();
 
         } catch (Exception e) {
-            log.error("Import failed: {}", e.getMessage());
+
+            log.error("Mark as 'IMPORT' interception failed: {}", e.getMessage());
             return null;
         } finally {
 
-            isImport = false;
-            log.info("Audit event 'CREATE' is back to normal");
+            // clean up old transaction keys
+            AuditUtil.cleanUpTransactionKeyMap(transactions);
+        }
+    }
+
+    public static boolean isImport() {
+        try {
+            return transactions.containsKey(AuditUtil.getTransactionKey());
+        } catch (NamingException e) {
+            return false;
         }
     }
 

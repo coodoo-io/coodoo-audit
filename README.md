@@ -4,13 +4,13 @@
 
 ## Getting started
 
-1. Add the [maven dependency](http://search.maven.org/#artifactdetails%7Cio.coodoo%7Ccoodoo-audit%7C1.0.1%7Cjar):
+1. Add the [maven dependency](http://search.maven.org/#artifactdetails%7Cio.coodoo%7Ccoodoo-audit%7C1.0.2%7Cjar):
 
    ```xml
     <dependency>
         <groupId>io.coodoo</groupId>
         <artifactId>coodoo-audit</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
     </dependency>
    ```
 

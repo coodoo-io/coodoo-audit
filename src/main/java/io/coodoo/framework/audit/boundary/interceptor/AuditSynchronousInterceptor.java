@@ -16,36 +16,37 @@ import org.slf4j.LoggerFactory;
 import io.coodoo.framework.audit.control.AuditUtil;
 
 /**
- * Marks the reading of an entity as an EXPORT audit event, annotate the method with <code>@AuditExport</code>
+ * Prevent asynchronous processing of audit events to avoid null-references in huge transactions by annotate the method with <code>@AuditSynchronous</code>
  * 
  * @author coodoo GmbH (coodoo.io)
  */
 @SuppressWarnings("serial")
-@AuditExport
+@AuditSynchronous
 @Interceptor
-public class AuditExportInterceptor implements Serializable {
+public class AuditSynchronousInterceptor implements Serializable {
 
-    private static Logger log = LoggerFactory.getLogger(AuditExportInterceptor.class);
+    private static Logger log = LoggerFactory.getLogger(AuditSynchronousInterceptor.class);
 
     private static Map<Integer, LocalDateTime> transactions = new HashMap<>();
 
-    public AuditExportInterceptor() {}
+    public AuditSynchronousInterceptor() {}
 
     @AroundInvoke
-    public Object toggleActionExport(InvocationContext invocationContext) throws Exception {
-
-        log.info("Audit events are now marked as 'EXPORT' for this transaction.");
-        transactions.put(AuditUtil.getTransactionKey(), LocalDateTime.now());
+    public Object toggleActionSynchronous(InvocationContext invocationContext) throws Exception {
 
         try {
 
-            // do whatever you must
+            log.info("Creating audit events synchronous only for this transaction.");
+            transactions.put(AuditUtil.getTransactionKey(), LocalDateTime.now());
+
+            // do audit events synchronous only
             return invocationContext.proceed();
 
         } catch (Exception e) {
 
-            log.error("Mark as 'EXPORT' interception failed: {}", e.getMessage());
+            log.error("Synchronous only interception failed: {}", e.getMessage());
             return null;
+
         } finally {
 
             // clean up old transaction keys
@@ -53,11 +54,12 @@ public class AuditExportInterceptor implements Serializable {
         }
     }
 
-    public static boolean isExport() {
+    public static boolean isSynchonousOnly() {
         try {
             return transactions.containsKey(AuditUtil.getTransactionKey());
         } catch (NamingException e) {
             return false;
         }
     }
+
 }

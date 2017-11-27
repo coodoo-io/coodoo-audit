@@ -30,7 +30,7 @@ public class AuditEntityListener {
 
         entity.setInitialValues(AuditUtil.getValues(entity));
 
-        if (AuditExportInterceptor.isExport) {
+        if (AuditExportInterceptor.isExport()) {
 
             log.debug("Audit {} Export", entity.getClass().getSimpleName());
             auditService.createAuditEvent(entity, AuditAction.EXPORT);
@@ -40,7 +40,7 @@ public class AuditEntityListener {
     @PostPersist
     public void create(AuditInitialValues entity) {
 
-        if (AuditImportInterceptor.isImport) {
+        if (AuditImportInterceptor.isImport()) {
 
             log.debug("Audit {} Import", entity.getClass().getSimpleName());
             auditService.createAuditEvent(entity, AuditAction.IMPORT);

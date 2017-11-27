@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import io.coodoo.framework.audit.boundary.annotation.AuditEntityManager;
+import io.coodoo.framework.audit.boundary.interceptor.AuditSynchronousInterceptor;
 import io.coodoo.framework.audit.control.AuditConfig;
 import io.coodoo.framework.audit.control.AuditController;
 import io.coodoo.framework.audit.control.AuditUser;
@@ -43,7 +44,7 @@ public class AuditService {
 
         LocalDateTime createdAt = LocalDateTime.now(ZoneId.of(AuditConfig.LOCAL_DATE_TIME_ZONE));
 
-        if (AuditUtil.groupEvents(entity, action)) {
+        if (AuditUtil.groupEvents(entity, action) || AuditSynchronousInterceptor.isSynchonousOnly()) {
             auditController.createAuditEvent(entity, action, getAuditUser(), createdAt);
         } else {
             auditController.createAuditEventAsynchronous(entity, action, getAuditUser(), createdAt);

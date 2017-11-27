@@ -10,12 +10,17 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.persistence.Id;
 import javax.persistence.Transient;
+import javax.transaction.TransactionSynchronizationRegistry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -195,6 +200,29 @@ public final class AuditUtil {
             log.warn("Could not get parent references: {}", e);
         }
         return parents;
+    }
+
+    public static int getTransactionKey() throws NamingException {
+
+        TransactionSynchronizationRegistry transactionSynchronizationRegistry =
+                        (TransactionSynchronizationRegistry) new InitialContext().lookup("java:comp/TransactionSynchronizationRegistry");
+
+        return transactionSynchronizationRegistry.getTransactionKey().hashCode();
+    }
+
+    public static void cleanUpTransactionKeyMap(Map<Integer, LocalDateTime> transactions) {
+
+        LocalDateTime deadline = LocalDateTime.now().minusMinutes(30);
+        Set<Integer> transactionKeysToRemove = new HashSet<>();
+
+        for (Map.Entry<Integer, LocalDateTime> entry : transactions.entrySet()) {
+            if (deadline.isAfter(entry.getValue())) {
+                transactionKeysToRemove.add(entry.getKey());
+            }
+        }
+        for (Integer transactionKey : transactionKeysToRemove) {
+            transactions.remove(transactionKey);
+        }
     }
 
 }
