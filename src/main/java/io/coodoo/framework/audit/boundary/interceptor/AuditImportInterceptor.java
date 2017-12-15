@@ -36,16 +36,16 @@ public class AuditImportInterceptor implements Serializable {
 
         try {
 
-            log.info("Audit events are now marked as 'IMPORT' for this transaction.");
-            transactions.put(AuditUtil.getTransactionKey(), LocalDateTime.now());
+            try {
+                log.info("Audit events are now marked as 'IMPORT' for this transaction.");
+                transactions.put(AuditUtil.getTransactionKey(), LocalDateTime.now());
+            } catch (Exception e) {
+                log.error("Mark as 'IMPORT' interception failed: {}", e.getMessage());
+            }
 
             // do a persist and get audited as an import
             return invocationContext.proceed();
 
-        } catch (Exception e) {
-
-            log.error("Mark as 'IMPORT' interception failed: {}", e.getMessage());
-            return null;
         } finally {
 
             // clean up old transaction keys

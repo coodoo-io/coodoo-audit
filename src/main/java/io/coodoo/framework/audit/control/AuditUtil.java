@@ -183,20 +183,16 @@ public final class AuditUtil {
                     field.setAccessible(true);
                     Object fieldValue = field.get(entity);
 
-                    for (Field parentField : getFields(field.getType())) {
+                    Field parentField = getIdField(field.getType());
+                    parentField.setAccessible(true);
+                    Object id = parentField.get(fieldValue);
 
-                        if (parentField.isAnnotationPresent(Id.class)) {
-                            parentField.setAccessible(true);
-                            Object id = parentField.get(fieldValue);
-
-                            if (id != null && (parentField.getType().equals(Long.class) || parentField.getType().equals(long.class))) {
-                                parents.put(field.getType(), (Long) id);
-                            }
-                        }
+                    if (id != null && (parentField.getType().equals(Long.class) || parentField.getType().equals(long.class))) {
+                        parents.put(field.getType(), (Long) id);
                     }
                 }
             }
-        } catch (SecurityException | IllegalArgumentException | IllegalAccessException e) {
+        } catch (NullPointerException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
             log.warn("Could not get parent references: {}", e);
         }
         return parents;

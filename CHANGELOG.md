@@ -6,11 +6,19 @@
 ### BREAKING CHANGES
 -->
 
+<a name="1.0.3"></a>
+
+## 1.0.3 (2017-12-15)
+
+### Bug Fixes
+
+ * Exception handling in interceptors
+ * Auditing of @OneToMany changes using @AuditCollectionParent
+
+
 <a name="1.0.2"></a>
 
-## 1.0.1 (2017-11-27)
-
-<a name="1.0.2"></a>
+## 1.0.2 (2017-11-27)
 
 ### Features
 
@@ -20,6 +28,7 @@
 ### Bug Fixes
 
  * Fixed getRelatedEntityValue() & toAuditableString()
+
 
 
 <a name="1.0.1"></a>

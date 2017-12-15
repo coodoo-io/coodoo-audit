@@ -34,18 +34,18 @@ public class AuditExportInterceptor implements Serializable {
     @AroundInvoke
     public Object toggleActionExport(InvocationContext invocationContext) throws Exception {
 
-        log.info("Audit events are now marked as 'EXPORT' for this transaction.");
-        transactions.put(AuditUtil.getTransactionKey(), LocalDateTime.now());
-
         try {
+
+            try {
+                log.info("Audit events are now marked as 'EXPORT' for this transaction.");
+                transactions.put(AuditUtil.getTransactionKey(), LocalDateTime.now());
+            } catch (Exception e) {
+                log.error("Mark as 'EXPORT' interception failed: {}", e.getMessage());
+            }
 
             // do whatever you must
             return invocationContext.proceed();
 
-        } catch (Exception e) {
-
-            log.error("Mark as 'EXPORT' interception failed: {}", e.getMessage());
-            return null;
         } finally {
 
             // clean up old transaction keys

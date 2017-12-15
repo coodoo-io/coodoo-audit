@@ -36,16 +36,15 @@ public class AuditSynchronousInterceptor implements Serializable {
 
         try {
 
-            log.info("Creating audit events synchronous only for this transaction.");
-            transactions.put(AuditUtil.getTransactionKey(), LocalDateTime.now());
+            try {
+                log.info("Creating audit events synchronous only for this transaction.");
+                transactions.put(AuditUtil.getTransactionKey(), LocalDateTime.now());
+            } catch (Exception e) {
+                log.error("Synchronous only interception failed: {}", e.getMessage());
+            }
 
             // do audit events synchronous only
             return invocationContext.proceed();
-
-        } catch (Exception e) {
-
-            log.error("Synchronous only interception failed: {}", e.getMessage());
-            return null;
 
         } finally {
 
