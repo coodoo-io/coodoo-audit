@@ -26,18 +26,22 @@
      user_id BIGINT(20) DEFAULT NULL,
      user_name VARCHAR(128) DEFAULT NULL,
      PRIMARY KEY (id)
-   );
+  );
 
-   CREATE TABLE audit_change (
-     id BIGINT(20) NOT NULL AUTO_INCREMENT,
-     event_id BIGINT(20) NOT NULL,
-     field VARCHAR(128) NOT NULL,
-     old_value VARCHAR(4096) DEFAULT NULL,
-     new_value VARCHAR(4096) DEFAULT NULL,
-     sub_event_id BIGINT(20) DEFAULT NULL,
-     sub_event_name VARCHAR(4096) DEFAULT NULL,
-     PRIMARY KEY (id)
-   );
+  CREATE TABLE audit_change (
+    id BIGINT(20) NOT NULL AUTO_INCREMENT,
+    event_id BIGINT(20) NOT NULL,
+    field VARCHAR(128) NOT NULL,
+    old_value VARCHAR(4096) DEFAULT NULL,
+    new_value VARCHAR(4096) DEFAULT NULL,
+    sub_event_id BIGINT(20) DEFAULT NULL,
+    sub_event_name VARCHAR(4096) DEFAULT NULL,
+    PRIMARY KEY (id),
+    KEY fk_audit_change__audit_event_idx (event_id),
+    CONSTRAINT fk_audit_change__audit_event FOREIGN KEY (event_id) 
+	  REFERENCES audit_event (id) 
+	  ON DELETE NO ACTION ON UPDATE NO ACTION
+  );
 
    ```
    *This is a MySQL example, see [here](https://github.com/coodoo-io/coodoo-audit/tree/master/src/main/resources/sql) for more.*
