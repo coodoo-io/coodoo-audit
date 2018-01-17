@@ -14,8 +14,8 @@
     </dependency>
    ```
 
-2. Create the audit tables `audit_event` and `audit_change` in your database.                                                                                                                                                  
-                                                                                                                                                                                                                               
+2. Create the audit tables `audit_event` and `audit_change` in your database.
+         
    ```sql
    CREATE TABLE audit_event (
      id BIGINT(20) NOT NULL AUTO_INCREMENT,
@@ -27,8 +27,8 @@
      user_name VARCHAR(128) DEFAULT NULL,
      PRIMARY KEY (id)
    );
-   
-  CREATE TABLE audit_change (
+
+   CREATE TABLE audit_change (
      id BIGINT(20) NOT NULL AUTO_INCREMENT,
      event_id BIGINT(20) NOT NULL,
      field VARCHAR(128) NOT NULL,
@@ -42,9 +42,9 @@
 	  REFERENCES audit_event (id) 
 	  ON DELETE NO ACTION ON UPDATE NO ACTION
    );
+
    ```
-                                                                                                                                                                                                                            
-*This is a MySQL example, see [here](https://github.com/coodoo-io/coodoo-audit/tree/master/src/main/resources/sql) for more.*                                                                                                  
+   *This is a MySQL example, see [here](https://github.com/coodoo-io/coodoo-audit/tree/master/src/main/resources/sql) for more.*
                  
 3. Add the audit entities to your persistence.xml:
 
