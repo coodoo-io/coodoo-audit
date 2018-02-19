@@ -6,6 +6,15 @@
 ### BREAKING CHANGES
 -->
 
+<a name="1.0.4"></a>
+
+## 1.0.4 (2018-02-99)
+
+### Features
+
+ * Performance gain by dissolving circular dependencies and using named queries
+
+
 <a name="1.0.3"></a>
 
 ## 1.0.3 (2017-12-15)

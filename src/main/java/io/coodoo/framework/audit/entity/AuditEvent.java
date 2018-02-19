@@ -28,11 +28,11 @@ import io.coodoo.framework.audit.control.AuditConfig;
  */
 @Entity
 @Table(name = "audit_event")
-@NamedQueries({@NamedQuery(name = "AuditEvent.getAllEvents", query = "select av from AuditEvent av where av.entity = :entity order by av.createdAt desc"),
+@NamedQueries({@NamedQuery(name = "AuditEvent.getAllEvents", query = "SELECT av FROM AuditEvent av WHERE av.entity = :entity ORDER BY av.createdAt DESC"),
                 @NamedQuery(name = "AuditEvent.getAllEventsForId",
-                                query = "select av from AuditEvent av where av.entity = :entity and av.entityId = :entityId order by av.createdAt desc"),
+                                query = "SELECT av FROM AuditEvent av WHERE av.entity = :entity AND av.entityId = :entityId ORDER BY av.createdAt DESC"),
                 @NamedQuery(name = "AuditEvent.getLatestEvent",
-                                query = "select av from AuditEvent av where av.entity = :entity and av.entityId = :entityId and av.createdAt >= :fromDate order by av.createdAt desc")})
+                                query = "SELECT av FROM AuditEvent av WHERE av.entity = :entity AND av.entityId = :entityId AND av.createdAt >= :fromDate ORDER BY av.createdAt DESC")})
 public class AuditEvent {
 
     @Id
