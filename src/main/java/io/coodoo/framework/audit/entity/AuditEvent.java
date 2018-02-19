@@ -9,13 +9,11 @@ import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Query;
 import javax.persistence.Table;
@@ -58,9 +56,6 @@ public class AuditEvent {
 
     @Column(name = "user_name", nullable = false)
     private String userName;
-
-    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
-    private List<AuditChange> changes;
 
     @PrePersist
     public void prePesist() {
@@ -125,18 +120,10 @@ public class AuditEvent {
         this.userName = userName;
     }
 
-    public List<AuditChange> getChanges() {
-        return changes;
-    }
-
-    public void setChanges(List<AuditChange> changes) {
-        this.changes = changes;
-    }
-
     @Override
     public String toString() {
         return "AuditEvent [id=" + id + ", createdAt=" + createdAt + ", entity=" + entity + ", entityId=" + entityId + ", action=" + action + ", userId="
-                        + userId + ", userName=" + userName + ", changes=" + changes + "]";
+                        + userId + ", userName=" + userName + "]";
     }
 
     @Override

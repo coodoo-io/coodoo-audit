@@ -216,17 +216,11 @@ public class AuditController {
                 // set latest values
                 for (AuditChange newChange : auditChanges) {
 
-                    boolean newField = true;
+                    AuditChange oldChange = AuditChange.getByEventAndField(entityManager, latestEvent, newChange.getField());
 
-                    for (AuditChange oldChange : latestEvent.getChanges()) {
-                        if (oldChange.getField().equals(newChange.getField())) {
-
-                            oldChange.setNewValue(newChange.getNewValue());
-                            newField = false;
-                            break;
-                        }
-                    }
-                    if (newField) {
+                    if (oldChange != null) {
+                        oldChange.setNewValue(newChange.getNewValue());
+                    } else {
                         newChange.setEvent(latestEvent);
                         entityManager.persist(newChange);
                     }

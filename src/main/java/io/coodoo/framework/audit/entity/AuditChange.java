@@ -1,14 +1,20 @@
 package io.coodoo.framework.audit.entity;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
+import javax.persistence.Query;
 import javax.persistence.Table;
 
 /**
@@ -16,6 +22,8 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "audit_change")
+@NamedQueries({@NamedQuery(name = "AuditChange.getByEvent", query = "SELECT ac FROM AuditChange ac WHERE ac.event = :event"),
+                @NamedQuery(name = "AuditChange.getByEventAndField", query = "SELECT ac FROM AuditChange ac WHERE ac.event = :event AND ac.field = :field")})
 public class AuditChange {
 
     @Id
@@ -129,6 +137,41 @@ public class AuditChange {
             return false;
         }
         return ((AuditChange) obj).getId().equals(getId());
+    }
+
+    /**
+     * Executes the query 'AuditChange.getByEvent' returning a list of result objects.
+     *
+     * @param entityManager the entityManager
+     * @param event the event
+     * @return List of result objects
+     */
+    @SuppressWarnings("unchecked")
+    public static List<AuditChange> getByEvent(EntityManager entityManager, AuditEvent event) {
+        Query query = entityManager.createNamedQuery("AuditChange.getByEvent");
+        query = query.setParameter("event", event);
+        return query.getResultList();
+    }
+
+    /**
+     * Executes the query 'AuditChange.getByEventAndField' returning one/the first object or null if nothing has been found.
+     *
+     * @param entityManager the entityManager
+     * @param event the event
+     * @param field the field
+     * @return the result
+     */
+    public static AuditChange getByEventAndField(EntityManager entityManager, AuditEvent event, String field) {
+        Query query = entityManager.createNamedQuery("AuditChange.getByEventAndField");
+        query = query.setParameter("event", event);
+        query = query.setParameter("field", field);
+        query = query.setMaxResults(1);
+        @SuppressWarnings("rawtypes")
+        List results = query.getResultList();
+        if (results.isEmpty()) {
+            return null;
+        }
+        return (AuditChange) results.get(0);
     }
 
 }

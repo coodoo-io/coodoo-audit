@@ -14,6 +14,7 @@ import io.coodoo.framework.audit.control.AuditConfig;
 import io.coodoo.framework.audit.control.AuditController;
 import io.coodoo.framework.audit.control.AuditUser;
 import io.coodoo.framework.audit.control.AuditUtil;
+import io.coodoo.framework.audit.entity.AuditChange;
 import io.coodoo.framework.audit.entity.AuditEvent;
 
 /**
@@ -38,6 +39,10 @@ public class AuditService {
 
     public List<AuditEvent> getEvents(String entity, Long entityId) {
         return AuditEvent.getAllEventsForId(entityManager, entity, entityId);
+    }
+
+    public List<AuditChange> getChanges(AuditEvent event) {
+        return AuditChange.getByEvent(entityManager, event);
     }
 
     public void createAuditEvent(AuditInitialValues entity, AuditAction action) {
