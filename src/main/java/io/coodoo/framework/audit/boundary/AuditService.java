@@ -41,8 +41,8 @@ public class AuditService {
         return AuditEvent.getAllEventsForId(entityManager, entity, entityId);
     }
 
-    public List<AuditChange> getChanges(AuditEvent event) {
-        return AuditChange.getByEvent(entityManager, event);
+    public List<AuditChange> getChanges(Long eventId) {
+        return AuditChange.getByEvent(entityManager, eventId);
     }
 
     public void createAuditEvent(AuditInitialValues entity, AuditAction action) {

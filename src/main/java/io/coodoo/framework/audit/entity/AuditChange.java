@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
@@ -22,8 +21,8 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "audit_change")
-@NamedQueries({@NamedQuery(name = "AuditChange.getByEvent", query = "SELECT ac FROM AuditChange ac WHERE ac.event = :event"),
-                @NamedQuery(name = "AuditChange.getByEventAndField", query = "SELECT ac FROM AuditChange ac WHERE ac.event = :event AND ac.field = :field")})
+@NamedQueries({@NamedQuery(name = "AuditChange.getByEvent", query = "SELECT ac FROM AuditChange ac WHERE ac.eventId = :eventId"), @NamedQuery(
+                name = "AuditChange.getByEventAndField", query = "SELECT ac FROM AuditChange ac WHERE ac.eventId = :eventId AND ac.field = :field")})
 public class AuditChange {
 
     @Id
@@ -31,9 +30,8 @@ public class AuditChange {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id")
-    private AuditEvent event;
+    @Column(name = "event_id")
+    private Long eventId;
 
     @Column(name = "field", nullable = false)
     private String field;
@@ -59,12 +57,12 @@ public class AuditChange {
         return id;
     }
 
-    public AuditEvent getEvent() {
-        return event;
+    public Long getEventId() {
+        return eventId;
     }
 
-    public void setEvent(AuditEvent event) {
-        this.event = event;
+    public void setEventId(Long eventId) {
+        this.eventId = eventId;
     }
 
     public String getField() {
@@ -109,7 +107,7 @@ public class AuditChange {
 
     @Override
     public String toString() {
-        return "AuditChange [id=" + id + ", event=" + event + ", field=" + field + ", oldValue=" + oldValue + ", newValue=" + newValue + ", subEvent="
+        return "AuditChange [id=" + id + ", eventId=" + eventId + ", field=" + field + ", oldValue=" + oldValue + ", newValue=" + newValue + ", subEvent="
                         + subEvent + ", subEventName=" + subEventName + "]";
     }
 
@@ -143,13 +141,13 @@ public class AuditChange {
      * Executes the query 'AuditChange.getByEvent' returning a list of result objects.
      *
      * @param entityManager the entityManager
-     * @param event the event
+     * @param eventId the eventId
      * @return List of result objects
      */
     @SuppressWarnings("unchecked")
-    public static List<AuditChange> getByEvent(EntityManager entityManager, AuditEvent event) {
+    public static List<AuditChange> getByEvent(EntityManager entityManager, Long eventId) {
         Query query = entityManager.createNamedQuery("AuditChange.getByEvent");
-        query = query.setParameter("event", event);
+        query = query.setParameter("eventId", eventId);
         return query.getResultList();
     }
 
@@ -157,13 +155,13 @@ public class AuditChange {
      * Executes the query 'AuditChange.getByEventAndField' returning one/the first object or null if nothing has been found.
      *
      * @param entityManager the entityManager
-     * @param event the event
+     * @param eventId the eventId
      * @param field the field
      * @return the result
      */
-    public static AuditChange getByEventAndField(EntityManager entityManager, AuditEvent event, String field) {
+    public static AuditChange getByEventAndField(EntityManager entityManager, Long eventId, String field) {
         Query query = entityManager.createNamedQuery("AuditChange.getByEventAndField");
-        query = query.setParameter("event", event);
+        query = query.setParameter("eventId", eventId);
         query = query.setParameter("field", field);
         query = query.setMaxResults(1);
         @SuppressWarnings("rawtypes")

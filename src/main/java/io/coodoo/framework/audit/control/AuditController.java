@@ -181,7 +181,7 @@ public class AuditController {
         entityManager.persist(auditEvent);
 
         auditChanges.forEach(auditChange -> {
-            auditChange.setEvent(auditEvent);
+            auditChange.setEventId(auditEvent.getId());
             entityManager.persist(auditChange);
         });
 
@@ -216,19 +216,19 @@ public class AuditController {
                 // set latest values
                 for (AuditChange newChange : auditChanges) {
 
-                    AuditChange oldChange = AuditChange.getByEventAndField(entityManager, latestEvent, newChange.getField());
+                    AuditChange oldChange = AuditChange.getByEventAndField(entityManager, latestEvent.getId(), newChange.getField());
 
                     if (oldChange != null) {
                         oldChange.setNewValue(newChange.getNewValue());
                     } else {
-                        newChange.setEvent(latestEvent);
+                        newChange.setEventId(latestEvent.getId());
                         entityManager.persist(newChange);
                     }
                 }
             } else {
                 // just add new changes
                 auditChanges.forEach(auditChange -> {
-                    auditChange.setEvent(latestEvent);
+                    auditChange.setEventId(latestEvent.getId());
                     entityManager.persist(auditChange);
                 });
             }

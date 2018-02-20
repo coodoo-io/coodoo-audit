@@ -47,9 +47,9 @@ public class AuditChangeTest {
             queryText = queryText.replace("  ", " ");
         }
         org.junit.Assert.assertEquals(
-                        "There's a change in the query string. Generated methods may not fit to the query anymore. Change from 'SELECT ac FROM AuditChange ac WHERE ac.event = :event' to '"
+                        "There's a change in the query string. Generated methods may not fit to the query anymore. Change from 'SELECT ac FROM AuditChange ac WHERE ac.eventId = :eventId' to '"
                                         + queryText + "'",
-                        "SELECT ac FROM AuditChange ac WHERE ac.event = :event", queryText);
+                        "SELECT ac FROM AuditChange ac WHERE ac.eventId = :eventId", queryText);
     }
 
     /**
@@ -61,13 +61,13 @@ public class AuditChangeTest {
         Query query = org.mockito.Mockito.mock(Query.class);
         EntityManager entityManager = org.mockito.Mockito.mock(EntityManager.class);
         org.mockito.BDDMockito.given(entityManager.createNamedQuery("AuditChange.getByEvent")).willReturn(query);
-        AuditEvent event = org.mockito.Mockito.mock(AuditEvent.class);
-        org.mockito.BDDMockito.given(query.setParameter("event", event)).willReturn(query);
+        Long eventId = java.lang.Long.valueOf(0);
+        org.mockito.BDDMockito.given(query.setParameter("eventId", eventId)).willReturn(query);
         // Call
-        io.coodoo.framework.audit.entity.AuditChange.getByEvent(entityManager, event);
+        io.coodoo.framework.audit.entity.AuditChange.getByEvent(entityManager, eventId);
         // Verification
         org.mockito.BDDMockito.verify(entityManager, org.mockito.Mockito.times(1)).createNamedQuery("AuditChange.getByEvent");
-        org.mockito.BDDMockito.verify(query, org.mockito.Mockito.times(1)).setParameter("event", event);
+        org.mockito.BDDMockito.verify(query, org.mockito.Mockito.times(1)).setParameter("eventId", eventId);
         org.mockito.BDDMockito.verify(query, org.mockito.Mockito.times(1)).getResultList();
     }
 
@@ -80,10 +80,10 @@ public class AuditChangeTest {
         String[][] classesFieldsAndTypes = new String[2][4];
         classesFieldsAndTypes[0][0] = "ac";
         classesFieldsAndTypes[0][1] = "io.coodoo.framework.audit.entity.AuditChange";
-        classesFieldsAndTypes[1][0] = "ac.event";
+        classesFieldsAndTypes[1][0] = "ac.eventId";
         classesFieldsAndTypes[1][1] = "io.coodoo.framework.audit.entity.AuditChange";
-        classesFieldsAndTypes[1][2] = "event";
-        classesFieldsAndTypes[1][3] = "io.coodoo.framework.audit.entity.AuditEvent";
+        classesFieldsAndTypes[1][2] = "eventId";
+        classesFieldsAndTypes[1][3] = "java.lang.Long";
         for (String[] testcase : classesFieldsAndTypes) {
             String fieldPath = testcase[0];
             String className = testcase[1];
@@ -154,9 +154,9 @@ public class AuditChangeTest {
             queryText = queryText.replace("  ", " ");
         }
         org.junit.Assert.assertEquals(
-                        "There's a change in the query string. Generated methods may not fit to the query anymore. Change from 'SELECT ac FROM AuditChange ac WHERE ac.event = :event AND ac.field = :field' to '"
+                        "There's a change in the query string. Generated methods may not fit to the query anymore. Change from 'SELECT ac FROM AuditChange ac WHERE ac.eventId = :eventId AND ac.field = :field' to '"
                                         + queryText + "'",
-                        "SELECT ac FROM AuditChange ac WHERE ac.event = :event AND ac.field = :field", queryText);
+                        "SELECT ac FROM AuditChange ac WHERE ac.eventId = :eventId AND ac.field = :field", queryText);
     }
 
     /**
@@ -171,16 +171,16 @@ public class AuditChangeTest {
         @SuppressWarnings("rawtypes")
         List results = new ArrayList();
         org.mockito.BDDMockito.given(query.getResultList()).willReturn(results);
-        AuditEvent event = org.mockito.Mockito.mock(AuditEvent.class);
-        org.mockito.BDDMockito.given(query.setParameter("event", event)).willReturn(query);
+        Long eventId = java.lang.Long.valueOf(0);
+        org.mockito.BDDMockito.given(query.setParameter("eventId", eventId)).willReturn(query);
         String field = "1";
         org.mockito.BDDMockito.given(query.setParameter("field", field)).willReturn(query);
         org.mockito.BDDMockito.given(query.setMaxResults(1)).willReturn(query);
         // Call
-        AuditChange result = io.coodoo.framework.audit.entity.AuditChange.getByEventAndField(entityManager, event, field);
+        AuditChange result = io.coodoo.framework.audit.entity.AuditChange.getByEventAndField(entityManager, eventId, field);
         // Verification
         org.mockito.BDDMockito.verify(entityManager, org.mockito.Mockito.times(1)).createNamedQuery("AuditChange.getByEventAndField");
-        org.mockito.BDDMockito.verify(query, org.mockito.Mockito.times(1)).setParameter("event", event);
+        org.mockito.BDDMockito.verify(query, org.mockito.Mockito.times(1)).setParameter("eventId", eventId);
         org.mockito.BDDMockito.verify(query, org.mockito.Mockito.times(1)).setParameter("field", field);
         org.mockito.BDDMockito.verify(query, org.mockito.Mockito.times(1)).getResultList();
         org.junit.Assert.assertNull("Result should be null if list is empty", result);
@@ -202,16 +202,16 @@ public class AuditChangeTest {
         results.add(first);
         results.add(second);
         org.mockito.BDDMockito.given(query.getResultList()).willReturn(results);
-        AuditEvent event = org.mockito.Mockito.mock(AuditEvent.class);
-        org.mockito.BDDMockito.given(query.setParameter("event", event)).willReturn(query);
+        Long eventId = java.lang.Long.valueOf(0);
+        org.mockito.BDDMockito.given(query.setParameter("eventId", eventId)).willReturn(query);
         String field = "1";
         org.mockito.BDDMockito.given(query.setParameter("field", field)).willReturn(query);
         org.mockito.BDDMockito.given(query.setMaxResults(1)).willReturn(query);
         // Call
-        AuditChange result = io.coodoo.framework.audit.entity.AuditChange.getByEventAndField(entityManager, event, field);
+        AuditChange result = io.coodoo.framework.audit.entity.AuditChange.getByEventAndField(entityManager, eventId, field);
         // Verification
         org.mockito.BDDMockito.verify(entityManager, org.mockito.Mockito.times(1)).createNamedQuery("AuditChange.getByEventAndField");
-        org.mockito.BDDMockito.verify(query, org.mockito.Mockito.times(1)).setParameter("event", event);
+        org.mockito.BDDMockito.verify(query, org.mockito.Mockito.times(1)).setParameter("eventId", eventId);
         org.mockito.BDDMockito.verify(query, org.mockito.Mockito.times(1)).setParameter("field", field);
         org.mockito.BDDMockito.verify(query, org.mockito.Mockito.times(1)).getResultList();
         org.junit.Assert.assertEquals("Result not the first of list.", first, result);
@@ -226,10 +226,10 @@ public class AuditChangeTest {
         String[][] classesFieldsAndTypes = new String[3][4];
         classesFieldsAndTypes[0][0] = "ac";
         classesFieldsAndTypes[0][1] = "io.coodoo.framework.audit.entity.AuditChange";
-        classesFieldsAndTypes[1][0] = "ac.event";
+        classesFieldsAndTypes[1][0] = "ac.eventId";
         classesFieldsAndTypes[1][1] = "io.coodoo.framework.audit.entity.AuditChange";
-        classesFieldsAndTypes[1][2] = "event";
-        classesFieldsAndTypes[1][3] = "io.coodoo.framework.audit.entity.AuditEvent";
+        classesFieldsAndTypes[1][2] = "eventId";
+        classesFieldsAndTypes[1][3] = "java.lang.Long";
         classesFieldsAndTypes[2][0] = "ac.field";
         classesFieldsAndTypes[2][1] = "io.coodoo.framework.audit.entity.AuditChange";
         classesFieldsAndTypes[2][2] = "field";
