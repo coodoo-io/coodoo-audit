@@ -6,6 +6,20 @@
 ### BREAKING CHANGES
 -->
 
+<a name="1.1.0"></a>
+
+## 1.1.0 (2020-11-11)
+
+### Features
+
+ * CDI replaces EJB in EntityListener
+ 
+
+### BREAKING CHANGES 
+
+ *  The `@Inject` in the EntityListener is not supported WildFly below version 11 see: [https://issues.jboss.org/browse/WFLY-2387](https://issues.jboss.org/browse/WFLY-2387)
+
+
 <a name="1.0.4"></a>
 
 ## 1.0.4 (2020-01-18)

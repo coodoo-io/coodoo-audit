@@ -1,7 +1,7 @@
 package io.coodoo.framework.audit.boundary;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.PostLoad;
 import javax.persistence.PostPersist;
 import javax.persistence.PostRemove;
@@ -22,7 +22,7 @@ public class AuditEntityListener {
 
     private static Logger log = LoggerFactory.getLogger(AuditEntityListener.class);
 
-    @EJB // @Inject BUG: Inject not possible in EntityListener, FIX available for WildFly 11.0.0.Alpha1, see: https://issues.jboss.org/browse/WFLY-2387
+    @Inject
     AuditService auditService;
 
     @PostLoad
